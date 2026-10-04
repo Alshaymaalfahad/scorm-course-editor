@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SCORM Course Editor</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+  <div id="loading" class="loading hidden"><div class="spinner"></div><div id="loadingText">جاري المعالجة...</div></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">S</div>
+      <div><strong>SCORM Course Editor</strong><small>محرر المقررات التعليمية</small></div>
+    </div>
+    <div class="toolbar">
+      <label class="button secondary file-button">فتح مقرر<input id="fileInput" type="file" accept=".zip,application/zip" hidden></label>
+      <button id="validateBtn" class="button secondary" disabled>فحص المقرر</button>
+      <button id="exportBtn" class="button primary" disabled>Export SCORM</button>
+    </div>
+  </header>
+
+  <main id="welcome" class="welcome">
+    <section class="drop-card" id="dropZone">
+      <div class="drop-icon">⇧</div>
+      <h1>افتح حزمة المقرر</h1>
+      <p>ارفع ملف ZIP الذي يحتوي على حزمة SCORM واحدة أو مجموعة وحدات SCORM.</p>
+      <button id="chooseBtn" class="button primary large">اختيار ملف ZIP</button>
+      <div class="features">
+        <span>SCORM 1.2</span><span>JSON Editor</span><span>Quiz Editor</span><span>Media Replace</span>
+      </div>
+    </section>
+  </main>
+
+  <main id="workspace" class="workspace hidden">
+    <aside class="sidebar">
+      <div class="course-summary">
+        <div class="eyebrow">المقرر المفتوح</div>
+        <strong id="fileName">—</strong>
+        <div class="stats"><span><b id="pkgCount">0</b> وحدات</span><span><b id="pageCount">0</b> شاشات</span></div>
+      </div>
+      <div class="search-wrap"><input id="searchInput" type="search" placeholder="بحث في الشاشات..."></div>
+      <div id="nav" class="nav"></div>
+    </aside>
+
+    <section class="editor-shell">
+      <div id="emptyEditor" class="empty-editor">
+        <div class="empty-icon">◫</div>
+        <h2>اختر شاشة من القائمة</h2>
+        <p>ستظهر هنا النصوص والأسئلة والوسائط القابلة للتعديل.</p>
+      </div>
+
+      <div id="editor" class="editor hidden">
+        <div class="editor-head">
+          <div>
+            <div id="pageBadge" class="badge">—</div>
+            <h2 id="pageHeading">—</h2>
+            <div id="pageMeta" class="muted">—</div>
+          </div>
+          <div class="editor-actions">
+            <span id="dirtyFlag" class="dirty hidden">تغييرات غير محفوظة</span>
+            <button id="saveBtn" class="button primary">حفظ الشاشة</button>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="content">المحتوى</button>
+          <button class="tab" data-tab="media">الوسائط</button>
+          <button class="tab" data-tab="raw">JSON</button>
+          <button class="tab" data-tab="package">بيانات الوحدة</button>
+        </div>
+
+        <div id="tab-content" class="tab-panel active">
+          <div class="field">
+            <label>عنوان الشاشة</label>
+            <input id="pageTitle" type="text" />
+          </div>
+          <div id="contentEditor"></div>
+        </div>
+
+        <div id="tab-media" class="tab-panel">
+          <div class="panel-title"><div><h3>وسائط الشاشة</h3><p>الملفات المرتبطة بهذه الشاشة أو المطابقة لاسمها.</p></div></div>
+          <div id="mediaList" class="media-list"></div>
+        </div>
+
+        <div id="tab-raw" class="tab-panel">
+          <div class="field"><label>JSON الخام</label><textarea id="rawJson" class="code" spellcheck="false"></textarea></div>
+        </div>
+
+        <div id="tab-package" class="tab-panel">
+          <div class="grid2">
+            <div class="field"><label>اسم المقرر</label><input id="courseName" type="text"></div>
+            <div class="field"><label>عنوان الوحدة</label><input id="unitTitle" type="text"></div>
+            <div class="field"><label>رمز المقرر</label><input id="courseCode" type="text" disabled></div>
+            <div class="field"><label>SCORM Version</label><input id="scormVersion" type="text" disabled></div>
+            <div class="field span2"><label>ملف PDF / المرجع</label><input id="pdfName" type="text"></div>
+          </div>
+          <button id="savePackageBtn" class="button primary">حفظ بيانات الوحدة</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="preview-pane">
+      <div class="preview-head"><strong>المعاينة</strong><span id="previewType" class="muted"></span></div>
+      <div id="preview" class="preview"><div class="preview-empty">اختر شاشة لعرض المعاينة</div></div>
+    </aside>
+  </main>
+
+  <dialog id="validationDialog">
+    <div class="dialog-head"><h3>فحص المقرر</h3><button id="closeValidation" class="icon-btn">×</button></div>
+    <div id="validationBody"></div>
+  </dialog>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
